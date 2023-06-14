@@ -23,16 +23,16 @@ public class PrimeCalculationUnfairThreading {
             //System.out.println("Total time taken for thread = " + ((thread_end_time - thread_start_time) / 1000) + " seconds");
             synchronized (MyThread.class) {
                 threadsCompleted++;
+                time2 = System.currentTimeMillis();
                 if(threadsCompleted == 10) {
-                    time2 = System.currentTimeMillis();
-                    System.out.println("Total time taken for thread = " +
-                            ((thread_end_time - thread_start_time) / 1000) + " seconds" + " and count = " + count);
+                    System.out.println("Total time taken = " +
+                            ((time2 - time1) / 1000) + " seconds" + " and count = " + count);
                 }
             }
         }
     }
     public void createThread(int ulimit, int no_of_concurrent_threads) {
-        int batch = 0;
+        int batch = 2;
         //long total_start_time = System.currentTimeMillis();
         for(int i = 0; i < 10; i++) {
             int batch_lower_limit = batch;
@@ -44,10 +44,10 @@ public class PrimeCalculationUnfairThreading {
         //long total_end_time = System.currentTimeMillis();
     }
     public static int checkPrime(int num) {
-        if ((num & 1) == 0)
+        if (num > 2 && (num & 1) == 0)
             return 0;
 
-        for (int i = 3; i <= Math.sqrt(num); i++) {
+        for (int i = 2; i <= Math.sqrt(num); i++) {
             if (num % i == 0)
                 return 0;
         }
