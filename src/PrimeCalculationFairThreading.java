@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PrimeCalculationFairThreading {
     static AtomicInteger count = new AtomicInteger(0);
     static AtomicInteger num = new AtomicInteger(2);
+    static int num1;
     static long time1, time2;
     static long  thread_start_time, thread_end_time;
     private static int threadsCompleted = 0;
@@ -15,15 +16,17 @@ public class PrimeCalculationFairThreading {
         public void run() {
             thread_start_time = System.currentTimeMillis();
             while (true) {
-                int num_int;
-                num_int = num.get();
+                int num_int = num.get();
                 if(num_int > 100000000)
                     break;
 
-                //synchronized (lock) {
-                    checkPrime(num_int);
+                checkPrime(num_int);
+                synchronized (num) {
                     num.addAndGet(1);
-                //}
+                }
+
+
+
 
                 //System.out.println("Total time taken for thread = " + ((thread_end_time - thread_start_time) / 1000) + " seconds");
             }
@@ -48,15 +51,17 @@ public class PrimeCalculationFairThreading {
         }
         //long total_end_time = System.currentTimeMillis();
     }
-    public static int checkPrime(int num) {
-        if (num > 2 && (num & 1) == 0)
+    public static int checkPrime(int num1) {
+        if (num1 > 2 && (num1 & 1) == 0)
             return 0;
 
-        for (int i = 2; i <= Math.sqrt(num); i++) {
-            if (num % i == 0)
+        for (int i = 2; i <= Math.sqrt(num1); i++) {
+            if (num1 % i == 0)
                 return 0;
         }
-        count.addAndGet(1);
+        synchronized (count) {
+            count.addAndGet(1);
+        }
         return 1;
     }
     public static void main(String[] args) {
